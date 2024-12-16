@@ -7,16 +7,16 @@ export async function POST(request: Request): Promise<Response>
     const arrayBuffer = await blob.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    const uuid = v4();
+    const screenshotId = v4();
 
-    fs.writeFile(`${process.env.SCREENSHOTS_DIR}/${uuid}.png`, buffer, (err) => {
+    fs.writeFile(`${process.env.SCREENSHOTS_DIR}/${screenshotId}.png`, buffer, (err) => {
         if (err) {
-            console.error(`Failed to save screenshot: ${err}`);
+            console.error(`Failed to add a screenshot: ${err}`);
         }
     });
 
     return Response.json({
-        id: uuid,
+        id: screenshotId,
         date: Date.now(),
-    })
+    });
 }
