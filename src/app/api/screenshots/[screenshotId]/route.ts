@@ -1,4 +1,5 @@
-import fs from "node:fs";
+import * as fs from "node:fs/promises";
+import * as path from "node:path";
 
 export async function DELETE(
     _: Request,
@@ -7,14 +8,30 @@ export async function DELETE(
 {
     const screenshotId = (await params).screenshotId;
 
-    fs.unlink(`${process.env.SCREENSHOTS_DIR}/${screenshotId}.png`, (err) => {
-        if (err) {
-            console.error(`Failed to remove a screenshot: ${err}`);
-        }
-    });
+    const filePath = path.join(
+        process.env.SCREENSHOTS_DIR!,
+        screenshotId.substring(0, 2),
+        screenshotId.substring(0, 4),
+        `${screenshotId}.png`,
+    );
 
-    return Response.json({
-        id: screenshotId,
-        date: Date.now(),
-    });
+    try {
+        await fs.unlink(filePath);
+
+        return Response.json({
+            id: screenshotId,
+        });
+    } catch (err) {
+        if (err instanceof Error && 'code' in err && err.code === 'ENOENT') {
+            return Response.json({
+                id: screenshotId,
+            });
+        }
+
+        const errorMessage = err instanceof Error ? err.message : String(err);
+        return Response.json(
+            { error: `Failed to delete breadcrumb: ${errorMessage}` },
+            { status: 500 }
+        );
+    }
 }
