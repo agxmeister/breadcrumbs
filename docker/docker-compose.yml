@@ -7,10 +7,11 @@ services:
       dockerfile: docker/Dockerfile.node
     container_name: breadcrumbs-app
     restart: unless-stopped
+    env_file:
+      - ../.env
     environment:
       - NODE_ENV=production
-      - SCREENSHOTS_DIR=/app/screenshots
-      - ACCESS_TOKEN=${ACCESS_TOKEN}
+      - PUBLIC_URL=http://localhost:8080
     volumes:
       - ../screenshots:/app/screenshots
     networks:
