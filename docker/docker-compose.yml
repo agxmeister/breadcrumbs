@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.node
+    container_name: breadcrumbs-app
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - SCREENSHOTS_DIR=/app/screenshots
+      - ACCESS_TOKEN=${ACCESS_TOKEN}
+    volumes:
+      - ../screenshots:/app/screenshots
+    networks:
+      - breadcrumbs-network
+    expose:
+      - "3110"
+
+  nginx:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.nginx
+    container_name: breadcrumbs-nginx
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - ../screenshots:/var/www/breadcrumbs/screenshots:ro
+    depends_on:
+      - app
+    networks:
+      - breadcrumbs-network
+
+networks:
+  breadcrumbs-network:
+    driver: bridge
