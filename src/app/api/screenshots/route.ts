@@ -11,7 +11,7 @@ export async function POST(request: Request): Promise<Response>
     const screenshotId = v4();
 
     const dirPath = path.join(
-        process.env.SCREENSHOTS_DIR!,
+        process.env.SCREENSHOTS_DIR || './screenshots',
         screenshotId.substring(0, 2),
         screenshotId.substring(0, 4),
     );

@@ -9,7 +9,7 @@ export async function DELETE(
     const screenshotId = (await params).screenshotId;
 
     const filePath = path.join(
-        process.env.SCREENSHOTS_DIR!,
+        process.env.SCREENSHOTS_DIR || './screenshots',
         screenshotId.substring(0, 2),
         screenshotId.substring(0, 4),
         `${screenshotId}.png`,
