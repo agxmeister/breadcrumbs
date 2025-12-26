@@ -13,7 +13,7 @@ services:
       - NODE_ENV=production
       - PUBLIC_URL=http://localhost:8080
     volumes:
-      - ../screenshots:/app/screenshots
+      - ../data:/app/data
     networks:
       - breadcrumbs-network
     expose:
@@ -28,7 +28,7 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - ../screenshots:/var/www/breadcrumbs/screenshots:ro
+      - ../data:/var/www/breadcrumbs/data:ro
     depends_on:
       - app
     networks:

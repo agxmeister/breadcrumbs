@@ -19,7 +19,7 @@ COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/next.config.ts ./
 COPY --from=builder /app/node_modules ./node_modules
 
-RUN mkdir -p /app/screenshots
+RUN mkdir -p /app/data/breadcrumbs
 
 EXPOSE 3110
 

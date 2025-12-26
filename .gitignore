@@ -1,5 +1,5 @@
-/screenshots/*
-!/screenshots/.gitkeep
+/data/*
+!/data/.gitkeep
 
 # dependencies
 /node_modules

@@ -8,22 +8,23 @@ export async function POST(request: Request): Promise<Response>
     const arrayBuffer = await blob.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    const screenshotId = v4();
+    const breadcrumbId = v4();
 
     const dirPath = path.join(
-        process.env.SCREENSHOTS_DIR || './screenshots',
-        screenshotId.substring(0, 2),
-        screenshotId.substring(0, 4),
+        process.env.DATA_DIR || './data',
+        'breadcrumbs',
+        breadcrumbId.substring(0, 2),
+        breadcrumbId.substring(0, 4),
     );
-    const filePath = path.join(dirPath, `${screenshotId}.png`);
+    const filePath = path.join(dirPath, `${breadcrumbId}.png`);
 
     try {
         await fs.mkdir(dirPath, { recursive: true });
         await fs.writeFile(filePath, buffer);
 
         return Response.json({
-            id: screenshotId,
-            url: `${process.env.PUBLIC_URL}/screenshots/${screenshotId}`,
+            id: breadcrumbId,
+            url: `${process.env.PUBLIC_URL}/breadcrumbs/${breadcrumbId}`,
         });
     } catch (err) {
         const errorMessage = err instanceof Error ? err.message : String(err);

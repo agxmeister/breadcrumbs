@@ -3,28 +3,29 @@ import * as path from "node:path";
 
 export async function DELETE(
     _: Request,
-    {params}: {params: Promise<{screenshotId: string}>},
+    {params}: {params: Promise<{breadcrumbId: string}>},
 ): Promise<Response>
 {
-    const screenshotId = (await params).screenshotId;
+    const breadcrumbId = (await params).breadcrumbId;
 
     const filePath = path.join(
-        process.env.SCREENSHOTS_DIR || './screenshots',
-        screenshotId.substring(0, 2),
-        screenshotId.substring(0, 4),
-        `${screenshotId}.png`,
+        process.env.DATA_DIR || './data',
+        'breadcrumbs',
+        breadcrumbId.substring(0, 2),
+        breadcrumbId.substring(0, 4),
+        `${breadcrumbId}.png`,
     );
 
     try {
         await fs.unlink(filePath);
 
         return Response.json({
-            id: screenshotId,
+            id: breadcrumbId,
         });
     } catch (err) {
         if (err instanceof Error && 'code' in err && err.code === 'ENOENT') {
             return Response.json({
-                id: screenshotId,
+                id: breadcrumbId,
             });
         }
 
