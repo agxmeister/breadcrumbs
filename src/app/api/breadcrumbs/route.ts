@@ -1,6 +1,4 @@
-import * as fs from "node:fs/promises";
-import {v4} from "uuid";
-import * as path from "node:path";
+import {BreadcrumbFactory, BreadcrumbService, BreadcrumbRepository} from "@/modules/breadcrumb";
 
 export async function POST(request: Request): Promise<Response>
 {
@@ -8,23 +6,19 @@ export async function POST(request: Request): Promise<Response>
     const arrayBuffer = await blob.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    const breadcrumbId = v4();
+    const dataDir = process.env.DATA_DIR || './data';
+    const publicUrl = process.env.PUBLIC_URL || '';
 
-    const dirPath = path.join(
-        process.env.DATA_DIR || './data',
-        'breadcrumbs',
-        breadcrumbId.substring(0, 2),
-        breadcrumbId.substring(0, 4),
-    );
-    const filePath = path.join(dirPath, `${breadcrumbId}.png`);
+    const repository = new BreadcrumbRepository();
+    const service = new BreadcrumbService(dataDir, publicUrl, repository);
+    const factory = new BreadcrumbFactory(service, repository);
 
     try {
-        await fs.mkdir(dirPath, { recursive: true });
-        await fs.writeFile(filePath, buffer);
+        const breadcrumb = await factory.create(buffer);
 
         return Response.json({
-            id: breadcrumbId,
-            url: `${process.env.PUBLIC_URL}/breadcrumbs/${breadcrumbId}`,
+            id: breadcrumb.id,
+            url: breadcrumb.url,
         });
     } catch (err) {
         const errorMessage = err instanceof Error ? err.message : String(err);

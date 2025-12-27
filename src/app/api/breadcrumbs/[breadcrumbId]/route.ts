@@ -1,5 +1,4 @@
-import * as fs from "node:fs/promises";
-import * as path from "node:path";
+import {BreadcrumbService, BreadcrumbRepository} from "@/modules/breadcrumb";
 
 export async function DELETE(
     _: Request,
@@ -8,16 +7,14 @@ export async function DELETE(
 {
     const breadcrumbId = (await params).breadcrumbId;
 
-    const filePath = path.join(
-        process.env.DATA_DIR || './data',
-        'breadcrumbs',
-        breadcrumbId.substring(0, 2),
-        breadcrumbId.substring(0, 4),
-        `${breadcrumbId}.png`,
-    );
+    const dataDir = process.env.DATA_DIR || './data';
+    const publicUrl = process.env.PUBLIC_URL || '';
+
+    const repository = new BreadcrumbRepository();
+    const service = new BreadcrumbService(dataDir, publicUrl, repository);
 
     try {
-        await fs.unlink(filePath);
+        await service.delete(breadcrumbId);
 
         return Response.json({
             id: breadcrumbId,
