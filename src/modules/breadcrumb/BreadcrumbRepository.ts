@@ -1,6 +1,8 @@
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
+import {injectable} from "inversify";
 
+@injectable()
 export class BreadcrumbRepository {
     async save(filePath: string, buffer: Buffer): Promise<void> {
         const dirPath = path.dirname(filePath);

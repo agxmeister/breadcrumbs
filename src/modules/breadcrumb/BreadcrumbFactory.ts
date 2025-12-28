@@ -1,12 +1,15 @@
 import {v4} from "uuid";
+import {inject, injectable} from "inversify";
+import {dependencies} from "@/dependencies";
 import {Breadcrumb} from "./types";
 import {BreadcrumbService} from "./BreadcrumbService";
 import {BreadcrumbRepository} from "./BreadcrumbRepository";
 
+@injectable()
 export class BreadcrumbFactory {
     constructor(
-        private readonly service: BreadcrumbService,
-        private readonly repository: BreadcrumbRepository,
+        @inject(dependencies.BreadcrumbService) private readonly service: BreadcrumbService,
+        @inject(dependencies.BreadcrumbRepository) private readonly repository: BreadcrumbRepository,
     ) {}
 
     async create(buffer: Buffer): Promise<Breadcrumb> {

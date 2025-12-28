@@ -1,4 +1,6 @@
-import {BreadcrumbFactory, BreadcrumbService, BreadcrumbRepository} from "@/modules/breadcrumb";
+import {container} from "@/container";
+import {dependencies} from "@/dependencies";
+import {BreadcrumbFactory} from "@/modules/breadcrumb";
 
 export async function POST(request: Request): Promise<Response>
 {
@@ -6,12 +8,7 @@ export async function POST(request: Request): Promise<Response>
     const arrayBuffer = await blob.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    const dataDir = process.env.DATA_DIR || './data';
-    const publicUrl = process.env.PUBLIC_URL || '';
-
-    const repository = new BreadcrumbRepository();
-    const service = new BreadcrumbService(dataDir, publicUrl, repository);
-    const factory = new BreadcrumbFactory(service, repository);
+    const factory = container.get<BreadcrumbFactory>(dependencies.BreadcrumbFactory);
 
     try {
         const breadcrumb = await factory.create(buffer);

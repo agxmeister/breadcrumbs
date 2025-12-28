@@ -1,4 +1,6 @@
-import {BreadcrumbService, BreadcrumbRepository} from "@/modules/breadcrumb";
+import {container} from "@/container";
+import {dependencies} from "@/dependencies";
+import {BreadcrumbService} from "@/modules/breadcrumb";
 
 export async function DELETE(
     _: Request,
@@ -7,11 +9,7 @@ export async function DELETE(
 {
     const breadcrumbId = (await params).breadcrumbId;
 
-    const dataDir = process.env.DATA_DIR || './data';
-    const publicUrl = process.env.PUBLIC_URL || '';
-
-    const repository = new BreadcrumbRepository();
-    const service = new BreadcrumbService(dataDir, publicUrl, repository);
+    const service = container.get<BreadcrumbService>(dependencies.BreadcrumbService);
 
     try {
         await service.delete(breadcrumbId);

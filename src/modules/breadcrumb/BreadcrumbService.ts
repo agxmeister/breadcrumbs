@@ -1,11 +1,14 @@
 import * as path from "node:path";
+import {inject, injectable} from "inversify";
+import {dependencies} from "@/dependencies";
 import {BreadcrumbRepository} from "./BreadcrumbRepository";
 
+@injectable()
 export class BreadcrumbService {
     constructor(
-        private readonly dataDir: string,
-        private readonly publicUrl: string,
-        private readonly repository: BreadcrumbRepository,
+        @inject(dependencies.DATA_BASE_PATH) private readonly dataDir: string,
+        @inject(dependencies.PUBLIC_URL) private readonly publicUrl: string,
+        @inject(dependencies.BreadcrumbRepository) private readonly repository: BreadcrumbRepository,
     ) {}
 
     getFilePath(breadcrumbId: string): string {
