@@ -8,9 +8,12 @@
         "lint": "next lint"
     },
     "dependencies": {
+        "@types/uuid": "^11.0.0",
+        "inversify": "^7.10.8",
         "next": "^15.2.6",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
+        "reflect-metadata": "^0.2.2",
         "uuid": "^11.0.3"
     },
     "devDependencies": {
