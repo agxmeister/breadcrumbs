@@ -14,14 +14,12 @@ export class BreadcrumbFactory {
 
     async create(buffer: Buffer): Promise<Breadcrumb> {
         const id = v4();
-        const filePath = this.service.getFilePath(id);
 
-        await this.repository.save(filePath, buffer);
+        await this.repository.save(id, buffer);
 
         return {
             id,
             url: this.service.getUrl(id),
-            filePath,
         };
     }
 }
